@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="2"
+   name=""
+   committed-date="2011-09-09T12:13:28.245254Z"
+   url="https://metms.svn.sourceforge.net/svnroot/metms/metms-0.3.4/pluginmanager/plugins"
+   last-author="mskyfire"
+   kind="dir"
+   uuid="96993572-2fe1-47bb-8cf7-67007c824c0a"
+   repos="https://metms.svn.sourceforge.net/svnroot/metms"
+   revision="129"/>
+<entry
+   committed-rev="2"
+   name="PluginManualIntegrator.py"
+   text-time="2011-11-22T13:38:01.119576Z"
+   committed-date="2011-09-09T12:13:28.245254Z"
+   checksum="204cb0fcd91b23966d7cd9a10ca5971d"
+   last-author="mskyfire"
+   kind="file"
+   prop-time="2011-11-22T13:38:01.105575Z"/>
+<entry
+   committed-rev="2"
+   name="__init__.py"
+   text-time="2011-11-22T13:38:01.127576Z"
+   committed-date="2011-09-09T12:13:28.245254Z"
+   checksum="d41d8cd98f00b204e9800998ecf8427e"
+   last-author="mskyfire"
+   kind="file"
+   prop-time="2011-11-22T13:38:01.110575Z"/>
+</wc-entries>

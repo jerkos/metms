@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="85"
+   name=""
+   committed-date="2011-10-24T13:15:12.009444Z"
+   url="https://metms.svn.sourceforge.net/svnroot/metms/metms-0.3.4/core/peakDetection/__init__.py"
+   last-author="mskyfire"
+   kind="dir"
+   uuid="96993572-2fe1-47bb-8cf7-67007c824c0a"
+   repos="https://metms.svn.sourceforge.net/svnroot/metms"
+   revision="129"/>
+</wc-entries>

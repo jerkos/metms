@@ -4,16 +4,21 @@ __author__ = 'Marco','cram@hotmail.fr'
 
 #import re
 #from multiprocessing import Process, Pool, cpu_count
-
+import multiprocessing
 from PyQt4.QtCore import SIGNAL, pyqtSlot, QObject, QPropertyAnimation, QRect, QThread
 from PyQt4.QtGui import QApplication, QMessageBox, qApp
 
 #from core import MetObjects
 #from parsers.MetNetcdfParser import MSNetcdfParser
-from controller.MetBaseControl import MSDialogController, MSThreadBasis
+from ..MetBaseControl import MSDialogController, MSThreadBasis
+#from controller.MetBaseControl import  MSThreadBasis
 from utils.misc import WithoutBlank, IceAndFire, Hot, GreenRed
 from utils.decorators import slots, check
 #import pp
+
+def load(sample):
+    sample.loadData()
+    return sample
 
 class MSParsingThread(MSThreadBasis):
     """thread for visualisation, parsing"""
@@ -39,28 +44,15 @@ class MSParsingThread(MSThreadBasis):
         a priori this function works better when it is not parallelized...
         
         """
-#        if QApplication.instance().multiCore:
-#            server = pp.Server()
-#            print "launch on %s cpu"%server.get_ncpus()
-#            jobs=[]
-#            for i, spl in enumerate(self.sampleList):
-#                job = server.submit(worker, (spl,), (slots, check), modules=('utils.decorators', 'core.MetObjects'))
-#                jobs.append(job)
-#                self.emission(int((i+1/len(self.sampleList))*100))
-#            #server.wait()
-#            for i, job in enumerate(jobs):
-#                self.sampleList[i] = job()
-#            server.print_stats()
-#            server.destroy()
-#            self.emission(100)
-#        else:
-        #self.exec_() #starts event loop
-        for i, spl in enumerate(self.sampleList):
-            if self.abort:
-                break#cause return
-            spl.loadData() if spl.kind=='HighRes' else spl.loadMZXMLData()
-            self.emission((float(i+1)/len(self.sampleList))*100)
-        
+        p = multiprocessing.Pool(processes=multiprocessing.cpu_count())
+        self.sampleList = p.map(load, self.sampleList, chunksize=5)
+        #for i, spl in enumerate(self.sampleList):
+        #     if self.abort:
+        #         break#cause return
+        #     spl.loadData() if spl.kind=='HighRes' else spl.loadMZXMLData()
+        self.emission(100)
+
+
 class MSVisualisationController(MSDialogController):
     """
     Visualisation Controller
@@ -80,16 +72,16 @@ class MSVisualisationController(MSDialogController):
     
     '''
     nb = 0
-    choices =("MRM", "High Resolution")
+    choices = ("", "High Resolution")
     
     def __init__(self, lspl, visu, creation=None):
         MSDialogController.__init__(self, lspl, visu, creation)
         MSVisualisationController.nb += 1
-        self.title = "Parsing nb: %d"%MSVisualisationController.nb
+        self.title = "Parsing nb: %d" % MSVisualisationController.nb
         
         QObject.connect(self.view.comboBox, SIGNAL('currentIndexChanged(const QString&)'), self.updateLayout)
         QObject.connect(self.view.fileDialogButton, SIGNAL('clicked()'), self.showOpenDialogs)
-        QObject.connect(self.qApp, SIGNAL('deleteLastController()'), self.qApp.deleteController)
+        #QObject.connect(self.qApp, SIGNAL('deleteLastController()'), self.qApp.deleteController)
         
     def _initialize(self):
         """called in MSDialogController.__init__()"""
@@ -101,10 +93,10 @@ class MSVisualisationController(MSDialogController):
             
     def getParameters(self):
         self.parameters["scan_type"] = self.view.comboBox.currentText()
-        if self.view.comboBox.currentText()=='High Resolution':
-            self.parameters['ppm']=self.view.ppm.value()
+        if self.view.comboBox.currentText() == 'High Resolution':
+            self.parameters['ppm'] = self.view.ppm.value()
         elif self.view.comboBox.currentText()=='MRM':
-            self.parameters['MSn']=self.view.msn.value()
+            self.parameters['MSn'] = self.view.msn.value()
         return self.parameters
     
     @pyqtSlot()
